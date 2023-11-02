@@ -53,6 +53,16 @@ ARG DEBIAN_FRONTEND=noninteractive
    useradd -m -s /bin/bash linuxbrew \
    echo 'linuxbrew ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers \
    su - linuxbrew -c 'mkdir ~/.linuxbrew'
+     
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)" \
+	
+echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >>~/.profile\
+	
+echo 'export MANPATH="/home/linuxbrew/.linuxbrew/share/man:$MANPATH"' >>~/.profile\
+	
+echo 'export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:$INFOPATH"' >>~/.profile\
+	
+source ~/.profile\
 
 USER linuxbrew
 COPY --chown=linuxbrew:linuxbrew . /home/linuxbrew/.linuxbrew/Homebrew
@@ -70,22 +80,7 @@ WORKDIR /home/linuxbrew
   .linuxbrew/var/homebrew/linked \
   .linuxbrew/Cellar \
   	
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)" \
-	
-echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >>~/.profile\
-	
-echo 'export MANPATH="/home/linuxbrew/.linuxbrew/share/man:$MANPATH"' >>~/.profile\
-	
-echo 'export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:$INFOPATH"' >>~/.profile\
-	
-source ~/.profile\
-brew install gcc \
- ln -s ../Homebrew/bin/brew .linuxbrew/bin/brew \
- git -C .linuxbrew/Homebrew remote set-url origin https://github.com/Homebrew/brew \
- git -C .linuxbrew/Homebrew fetch origin \
- HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_AUTO_UPDATE=1 brew tap --force homebrew/core \
- brew install-bundler-gems \
- brew cleanup \
+
  { git -C .linuxbrew/Homebrew config --unset gc.auto; true; } \
  { git -C .linuxbrew/Homebrew config --unset homebrew.devcmdrun; true; } \
  rm -rf .cache \
