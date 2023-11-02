@@ -11,11 +11,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 # /etc/lsb-release is checked inside the container and sets DISTRIB_RELEASE.
 # We need `[` instead of `[[` because the shell is `/bin/sh`.
 # p
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends software-properties-common gnupg-agent \
-  && add-apt-repository -y ppa:git-core/ppa \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends \
+ apt-get update \
+ apt-get install -y --no-install-recommends software-properties-common gnupg-agent \
+ add-apt-repository -y ppa:git-core/ppa \
+   apt-get update \
+   apt-get install -y --no-install-recommends \
   acl \
   bzip2 \
   ca-certificates \
@@ -38,28 +38,28 @@ RUN apt-get update \
   uuid-runtime \
   tzdata \
   jq \
-  && if [ "$(. /etc/lsb-release; echo "${DISTRIB_RELEASE}" | cut -d. -f1)" -ge 22 ]; then apt-get install -y --no-install-recommends skopeo; fi \
-  && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-  && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends gh \
-  && apt-get remove --purge -y software-properties-common \
-  && apt-get autoremove --purge -y \
-  && rm -rf /var/lib/apt/lists/* \
-  && sed -i -E '/^session optional\s+pam_umask\.so$/ s/$/ umask=0022/' /etc/pam.d/common-session \
-  && sed -i -E '/^session optional\s+pam_umask\.so$/ s/$/ umask=0022/' /etc/pam.d/common-session-noninteractive \
-  && localedef -i en_US -f UTF-8 en_US.UTF-8 \
-  && useradd -m -s /bin/bash linuxbrew \
-  && echo 'linuxbrew ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers \
-  && su - linuxbrew -c 'mkdir ~/.linuxbrew'
+   if [ "$(. /etc/lsb-release; echo "${DISTRIB_RELEASE}" | cut -d. -f1)" -ge 22 ]; then apt-get install -y --no-install-recommends skopeo; fi \
+   curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+   chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+   apt-get update \
+   apt-get install -y --no-install-recommends gh \
+   apt-get remove --purge -y software-properties-common \
+   apt-get autoremove --purge -y \
+   rm -rf /var/lib/apt/lists/* \
+   sed -i -E '/^session optional\s+pam_umask\.so$/ s/$/ umask=0022/' /etc/pam.d/common-session \
+   sed -i -E '/^session optional\s+pam_umask\.so$/ s/$/ umask=0022/' /etc/pam.d/common-session-noninteractive \
+   localedef -i en_US -f UTF-8 en_US.UTF-8 \
+   useradd -m -s /bin/bash linuxbrew \
+   echo 'linuxbrew ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers \
+   su - linuxbrew -c 'mkdir ~/.linuxbrew'
 
 USER linuxbrew
 COPY --chown=linuxbrew:linuxbrew . /home/linuxbrew/.linuxbrew/Homebrew
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
 WORKDIR /home/linuxbrew
 
-RUN mkdir -p \
+ mkdir -p \
   .linuxbrew/bin \
   .linuxbrew/etc \
   .linuxbrew/include \
@@ -69,13 +69,14 @@ RUN mkdir -p \
   .linuxbrew/share \
   .linuxbrew/var/homebrew/linked \
   .linuxbrew/Cellar \
-  && ln -s ../Homebrew/bin/brew .linuxbrew/bin/brew \
-  && git -C .linuxbrew/Homebrew remote set-url origin https://github.com/Homebrew/brew \
-  && git -C .linuxbrew/Homebrew fetch origin \
-  && HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_AUTO_UPDATE=1 brew tap --force homebrew/core \
-  && brew install-bundler-gems \
-  && brew cleanup \
-  && { git -C .linuxbrew/Homebrew config --unset gc.auto; true; } \
-  && { git -C .linuxbrew/Homebrew config --unset homebrew.devcmdrun; true; } \
-  && rm -rf .cache \
-  && touch .linuxbrew/.homebrewdocker
+ ln -s ../Homebrew/bin/brew .linuxbrew/bin/brew \
+ git -C .linuxbrew/Homebrew remote set-url origin https://github.com/Homebrew/brew \
+ git -C .linuxbrew/Homebrew fetch origin \
+ HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_AUTO_UPDATE=1 brew tap --force homebrew/core \
+ brew install-bundler-gems \
+ brew cleanup \
+ { git -C .linuxbrew/Homebrew config --unset gc.auto; true; } \
+ { git -C .linuxbrew/Homebrew config --unset homebrew.devcmdrun; true; } \
+ rm -rf .cache \
+ touch .linuxbrew/.homebrewdocker
+
