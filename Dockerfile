@@ -69,6 +69,17 @@ WORKDIR /home/linuxbrew
   .linuxbrew/share \
   .linuxbrew/var/homebrew/linked \
   .linuxbrew/Cellar \
+  	
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)" \
+	
+echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >>~/.profile\
+	
+echo 'export MANPATH="/home/linuxbrew/.linuxbrew/share/man:$MANPATH"' >>~/.profile\
+	
+echo 'export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:$INFOPATH"' >>~/.profile\
+	
+source ~/.profile\
+brew install gcc \
  ln -s ../Homebrew/bin/brew .linuxbrew/bin/brew \
  git -C .linuxbrew/Homebrew remote set-url origin https://github.com/Homebrew/brew \
  git -C .linuxbrew/Homebrew fetch origin \
