@@ -49,3 +49,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+
+      - name: Build ArchLinux Packages
+  # You may pin to the exact commit or the version.
+  # uses: zjuyk/pkgbuild-aur@a660603570d1d8e2f4a40f36065f59b5bd474b03         
+        uses: zjuyk/pkgbuild-aur@v1.0
+        with:
+         pkg-name: iOs
+
+         
