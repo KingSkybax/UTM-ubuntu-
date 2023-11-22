@@ -50,13 +50,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v2
 
-      - name: Build ArchLinux Packages
-        uses: zjuyk/pkgbuild-aur@a660603570d1d8e2f4a40f36065f59b5bd474b03
-        with:
-         # ArchLinux package name to build
-         pkg-name: build
-         
-
+  
 
     
 
